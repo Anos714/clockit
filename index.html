@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-theme-preference="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <link
+      rel="preload"
+      href="/fonts/Fraunces.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Karla.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <style>
+      html {
+        background: #f2f0e7;
+      }
+      html[data-theme="dark"] {
+        background: #0d1510;
+      }
+    </style>
+    <script>
+      (function () {
+        try {
+          var preference = localStorage.getItem("tempo.theme") || "system";
+          var cached = localStorage.getItem("tempo.theme.resolved");
+          var dark =
+            preference === "dark" ||
+            (preference !== "light" &&
+              (cached
+                ? cached === "dark"
+                : window.matchMedia("(prefers-color-scheme: dark)").matches));
+          var root = document.documentElement;
+          root.dataset.theme = dark ? "dark" : "light";
+          root.dataset.themePreference = preference;
+          root.style.colorScheme = dark ? "dark" : "light";
+        } catch (error) {
+          // theme cache is optional
+        }
+      })();
+    </script>
+    <title>Tempo</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
