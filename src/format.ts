@@ -9,21 +9,45 @@ export function formatClock(ms: number): string {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-export function splitStopwatch(ms: number): {
+export interface ClockParts {
   main: string;
   fraction: string;
-} {
+}
+
+function mainClock(hours: number, minutes: number, seconds: number): string {
+  const mm = String(minutes).padStart(2, "0");
+  const ss = String(seconds).padStart(2, "0");
+  return hours > 0 ? `${hours}:${mm}:${ss}` : `${mm}:${ss}`;
+}
+
+function millisFraction(ms: number): string {
+  return String(Math.floor(ms % 1000)).padStart(3, "0");
+}
+
+export function splitCountdown(ms: number): ClockParts {
   const safe = Math.max(0, ms);
   const wholeSeconds = Math.floor(safe / 1000);
-  const hours = Math.floor(wholeSeconds / 3600);
-  const minutes = Math.floor((wholeSeconds % 3600) / 60);
-  const seconds = wholeSeconds % 60;
-  const centis = Math.floor((safe % 1000) / 10);
-  const main =
-    hours > 0
-      ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
-      : `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  return { main, fraction: String(centis).padStart(2, "0") };
+  return {
+    main: mainClock(
+      Math.floor(wholeSeconds / 3600),
+      Math.floor((wholeSeconds % 3600) / 60),
+      wholeSeconds % 60,
+    ),
+    fraction: millisFraction(safe),
+  };
+}
+
+export function splitStopwatch(ms: number): ClockParts {
+  const safe = Math.max(0, ms);
+  const wholeSeconds = Math.floor(safe / 1000);
+  return {
+    main: mainClock(
+      Math.floor(wholeSeconds / 3600),
+      Math.floor((wholeSeconds % 3600) / 60),
+      wholeSeconds % 60,
+    ),
+    fraction: millisFraction(safe),
+  };
 }
 
 export function formatStopwatch(ms: number): string {

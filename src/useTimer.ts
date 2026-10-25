@@ -49,16 +49,15 @@ export function useTimer() {
     };
   }, []);
 
-  const stopwatchTicking =
-    snapshot?.mode === "stopwatch" && snapshot.status === "running";
+  const clockRunning = snapshot?.status === "running";
 
   useEffect(() => {
     const tick = window.setInterval(
       () => setNow(Date.now()),
-      stopwatchTicking ? 50 : 200,
+      clockRunning ? 33 : 200,
     );
     return () => window.clearInterval(tick);
-  }, [stopwatchTicking]);
+  }, [clockRunning]);
 
   const run = useCallback(
     async (action: () => Promise<TimerSnapshot>) => {
