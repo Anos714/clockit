@@ -1,6 +1,6 @@
 import { MotionConfig, motion } from "motion/react";
 import { api } from "./api";
-import { formatClock, splitStopwatch } from "./format";
+import { splitCountdown, splitStopwatch } from "./format";
 import { useTimer } from "./useTimer";
 import { useTheme } from "./useTheme";
 import { LeafGlyph } from "./components/Botanical";
@@ -18,8 +18,8 @@ export default function MiniApp() {
 
   const status = snapshot?.status ?? "idle";
   const stopwatch = mode === "stopwatch";
-  const clock = splitStopwatch(displayMs);
-  const text = stopwatch ? clock.main : formatClock(displayMs);
+  const clock = stopwatch ? splitStopwatch(displayMs) : splitCountdown(displayMs);
+  const text = clock.main;
 
   const primary = () => {
     if (status === "running") {
@@ -60,9 +60,7 @@ export default function MiniApp() {
           {snapshot ? (
             <>
               {text}
-              {stopwatch ? (
-                <span className="mini-fraction">.{clock.fraction}</span>
-              ) : null}
+              <span className="mini-fraction">.{clock.fraction}</span>
             </>
           ) : (
             "--:--"

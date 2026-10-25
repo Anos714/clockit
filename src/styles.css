@@ -998,7 +998,7 @@ kbd {
 
 .time {
   font-family: "Karla", "Fira Sans", system-ui, sans-serif;
-  font-size: clamp(56px, 6vw, 72px);
+  font-size: clamp(46px, 5.2vw, 58px);
   font-weight: 300;
   line-height: 0.94;
   letter-spacing: -0.052em;
@@ -1007,15 +1007,15 @@ kbd {
 }
 
 .time-sm {
-  font-size: clamp(46px, 5vw, 58px);
+  font-size: clamp(34px, 3.9vw, 46px);
 }
 
 .time-fraction {
-  margin-left: 0.02em;
-  font-size: 0.46em;
+  margin-left: 0.035em;
+  font-size: 0.44em;
   font-weight: 400;
   letter-spacing: -0.03em;
-  opacity: 0.58;
+  opacity: 0.5;
 }
 
 .ring-caption {
@@ -2170,6 +2170,7 @@ kbd {
 }
 
 .focus-fraction {
+  margin-left: -0.03em;
   font-size: 0.44em;
   font-weight: 300;
   opacity: 0.55;
@@ -2456,10 +2457,6 @@ html[data-window="mini"] #root {
   font-variant-numeric: tabular-nums;
 }
 
-.mini.stopwatch .mini-time {
-  font-size: 41px;
-}
-
 .mini-fraction {
   margin-left: 0.03em;
   font-size: 0.48em;
@@ -2588,7 +2585,11 @@ html.theme-changing .forest-backdrop {
   }
 
   .time {
-    font-size: 54px;
+    font-size: 50px;
+  }
+
+  .time-sm {
+    font-size: 40px;
   }
 
   .duration-slot {

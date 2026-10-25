@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { api } from "./api";
-import { formatClock, formatMinutes, splitStopwatch } from "./format";
+import { formatMinutes, splitCountdown, splitStopwatch } from "./format";
 import { useTimer } from "./useTimer";
 import { useTheme } from "./useTheme";
 import type {
@@ -552,8 +552,8 @@ function FocusView({
   onExit,
 }: FocusViewProps) {
   const stopwatch = mode === "stopwatch";
-  const clock = splitStopwatch(displayMs);
-  const text = stopwatch ? clock.main : formatClock(displayMs);
+  const clock = stopwatch ? splitStopwatch(displayMs) : splitCountdown(displayMs);
+  const text = clock.main;
   const label =
     status === "running"
       ? stopwatch
@@ -608,14 +608,10 @@ function FocusView({
         </span>
 
         <div
-          className={`focus-time ${text.length > 5 ? "focus-time-sm" : ""} ${
-            stopwatch ? "focus-time-stopwatch" : ""
-          }`}
+          className={`focus-time ${text.length > 5 ? "focus-time-sm" : ""}`}
         >
           {text}
-          {stopwatch ? (
-            <span className="focus-fraction">.{clock.fraction}</span>
-          ) : null}
+          <span className="focus-fraction">.{clock.fraction}</span>
         </div>
 
         <p className="focus-sub">

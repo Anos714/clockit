@@ -7,7 +7,8 @@ wall-clock timer in Rust, and stores sessions locally in SQLite.
 ## Features
 
 - Countdown timer with 5 / 15 / 25 / 45 / 60 minute presets and a custom duration.
-- Stopwatch that counts up to centiseconds and keeps its elapsed time across pauses and restarts.
+- Clock shows seconds and a live millisecond fraction in timer, stopwatch, mini window, and focus mode.
+- Stopwatch with millisecond display that keeps its elapsed time across pauses and restarts.
 - Start, pause, resume, reset. Keyboard: `Space` start/pause, `R` reset, `F` focus mode.
 - Wall-clock engine: survives app restarts and system suspend.
 - COSMIC panel tray with live time, start/pause, reset, mini window, quit.

@@ -1,4 +1,8 @@
-import { formatClock, formatMinutes, splitStopwatch } from "../format";
+import {
+  formatMinutes,
+  splitCountdown,
+  splitStopwatch,
+} from "../format";
 import type { TimerMode, TimerStatus } from "../types";
 
 const RADIUS = 142;
@@ -28,8 +32,8 @@ export function TimerRing({
   status,
 }: TimerRingProps) {
   const stopwatch = mode === "stopwatch";
-  const clock = stopwatch ? splitStopwatch(displayMs) : null;
-  const text = stopwatch ? clock!.main : formatClock(displayMs);
+  const clock = stopwatch ? splitStopwatch(displayMs) : splitCountdown(displayMs);
+  const text = clock.main;
   const caption = stopwatch
     ? status === "running"
       ? "counting up"
@@ -99,13 +103,9 @@ export function TimerRing({
       </svg>
 
       <div className="ring-center">
-        <span
-          className={`time ${text.length > 5 ? "time-sm" : ""} ${stopwatch ? "time-stopwatch" : ""}`}
-        >
+        <span className={`time ${text.length > 5 ? "time-sm" : ""}`}>
           {text}
-          {clock ? (
-            <span className="time-fraction">.{clock.fraction}</span>
-          ) : null}
+          <span className="time-fraction">.{clock.fraction}</span>
         </span>
         <span className={`ring-caption ${status}`}>
           <span className="status-dot" />
