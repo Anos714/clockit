@@ -16,6 +16,7 @@ import { TimerRing } from "./components/TimerRing";
 import { ModeSwitch } from "./components/ModeSwitch";
 import { SessionList } from "./components/SessionList";
 import { SettingsPanel } from "./components/SettingsPanel";
+import { Insights } from "./components/Insights";
 import { TodoList } from "./components/TodoList";
 import {
   CornerSprig,
@@ -25,6 +26,7 @@ import {
   SproutMark,
 } from "./components/Botanical";
 import {
+  ChartIcon,
   ClockIcon,
   LeafIcon,
   MaximizeIcon,
@@ -65,6 +67,7 @@ export default function App() {
   const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [settingsView, setSettingsView] = useState<SettingsView | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showInsights, setShowInsights] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [customMinutes, setCustomMinutes] = useState("30");
@@ -148,6 +151,26 @@ export default function App() {
     }
   }, [settingsView]);
 
+  const clearUsage = useCallback(async () => {
+    try {
+      await api.clearUsageHistory();
+      setActionError(null);
+    } catch (reason) {
+      setActionError(String(reason));
+      throw reason;
+    }
+  }, []);
+
+  const openSettings = useCallback(() => {
+    setShowInsights(false);
+    setShowSettings(true);
+  }, []);
+
+  const openInsights = useCallback(() => {
+    setShowSettings(false);
+    setShowInsights(true);
+  }, []);
+
   const switchTheme = useCallback(() => {
     if (settingsView) {
       void updateSettings({
@@ -170,6 +193,14 @@ export default function App() {
         return;
       }
 
+      if (showInsights) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setShowInsights(false);
+        }
+        return;
+      }
+
       const target = event.target as HTMLElement | null;
       const tag = target?.tagName ?? "";
       if (
@@ -188,6 +219,9 @@ export default function App() {
       } else if (event.key === "f" || event.key === "F") {
         event.preventDefault();
         void applyFocus(!focusMode);
+      } else if (event.key === "i" || event.key === "I") {
+        event.preventDefault();
+        if (!focusMode) openInsights();
       } else if (event.key === "Escape" && focusMode) {
         void applyFocus(false);
       }
@@ -195,7 +229,7 @@ export default function App() {
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [actions, applyFocus, focusMode, showSettings]);
+  }, [actions, applyFocus, focusMode, openInsights, showInsights, showSettings]);
 
   const primary = () => {
     if (status === "running") {
@@ -297,6 +331,14 @@ export default function App() {
             </button>
             <button
               className="icon-btn"
+              onClick={openInsights}
+              title="Insights (I)"
+              aria-label="Open usage insights"
+            >
+              <ChartIcon />
+            </button>
+            <button
+              className="icon-btn"
               onClick={() => void api.openMini()}
               title="Mini window"
               aria-label="Open mini window"
@@ -313,7 +355,7 @@ export default function App() {
             </button>
             <button
               className="icon-btn"
-              onClick={() => setShowSettings(true)}
+              onClick={openSettings}
               title="Settings"
               aria-label="Open settings"
               disabled={!settingsView}
@@ -480,7 +522,8 @@ export default function App() {
 
             <p className="hint">
               <kbd>Space</kbd> start / pause <span>·</span> <kbd>R</kbd> reset{" "}
-              <span>·</span> <kbd>F</kbd> focus
+              <span>·</span> <kbd>F</kbd> focus <span>·</span> <kbd>I</kbd>{" "}
+              insights
             </p>
           </section>
 
@@ -521,7 +564,17 @@ export default function App() {
               onClose={() => setShowSettings(false)}
               onUpdate={updateSettings}
               onAutostart={toggleAutostart}
+              onClearUsage={clearUsage}
               error={actionError}
+            />
+          ) : null}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showInsights ? (
+            <Insights
+              key="insights"
+              onClose={() => setShowInsights(false)}
             />
           ) : null}
         </AnimatePresence>

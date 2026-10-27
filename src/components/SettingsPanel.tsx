@@ -6,6 +6,7 @@ import {
   LeafIcon,
   MonitorIcon,
   MoonIcon,
+  ShieldIcon,
   SunIcon,
 } from "./Icons";
 import { SproutMark } from "./Botanical";
@@ -15,6 +16,7 @@ interface SettingsPanelProps {
   onClose: () => void;
   onUpdate: (patch: Partial<Settings>) => Promise<void>;
   onAutostart: () => Promise<void>;
+  onClearUsage: () => Promise<void>;
   error?: string | null;
 }
 
@@ -39,13 +41,25 @@ export function SettingsPanel({
   onClose,
   onUpdate,
   onAutostart,
+  onClearUsage,
   error,
 }: SettingsPanelProps) {
   const [minutes, setMinutes] = useState(String(view.settings.defaultMinutes));
+  const [idleMinutes, setIdleMinutes] = useState(
+    String(Math.round(view.settings.idleThresholdSecs / 60)),
+  );
+  const [clearState, setClearState] = useState<"idle" | "confirm" | "cleared">(
+    "idle",
+  );
+  const [clearing, setClearing] = useState(false);
 
   useEffect(() => {
     setMinutes(String(view.settings.defaultMinutes));
   }, [view.settings.defaultMinutes]);
+
+  useEffect(() => {
+    setIdleMinutes(String(Math.round(view.settings.idleThresholdSecs / 60)));
+  }, [view.settings.idleThresholdSecs]);
 
   const saveMinutes = (event: FormEvent) => {
     event.preventDefault();
@@ -54,6 +68,32 @@ export function SettingsPanel({
     const clamped = Math.min(1440, Math.max(1, Math.round(parsed)));
     setMinutes(String(clamped));
     void onUpdate({ defaultMinutes: clamped });
+  };
+
+  const saveIdle = (event: FormEvent) => {
+    event.preventDefault();
+    const parsed = Number(idleMinutes);
+    if (!Number.isFinite(parsed)) return;
+    const clamped = Math.min(30, Math.max(1, Math.round(parsed)));
+    setIdleMinutes(String(clamped));
+    void onUpdate({ idleThresholdSecs: clamped * 60 });
+  };
+
+  const clearUsage = async () => {
+    if (clearing || clearState === "cleared") return;
+    if (clearState === "idle") {
+      setClearState("confirm");
+      return;
+    }
+    setClearing(true);
+    try {
+      await onClearUsage();
+      setClearState("cleared");
+    } catch {
+      setClearState("idle");
+    } finally {
+      setClearing(false);
+    }
   };
 
   return (
@@ -176,6 +216,69 @@ export function SettingsPanel({
               }
             />
           </SettingRow>
+        </section>
+
+        <section className="settings-section">
+          <h3>Privacy &amp; insight</h3>
+          <SettingRow
+            label="Usage insights"
+            description="Record app names and time spent. Window titles are never stored."
+          >
+            <Switch
+              checked={view.settings.usageTrackingEnabled}
+              onChange={() =>
+                void onUpdate({
+                  usageTrackingEnabled: !view.settings.usageTrackingEnabled,
+                })
+              }
+            />
+          </SettingRow>
+          <form className="default-form" onSubmit={saveIdle}>
+            <label htmlFor="idle-minutes">Pause tracking after</label>
+            <div className="inline-field">
+              <input
+                id="idle-minutes"
+                type="number"
+                min={1}
+                max={30}
+                value={idleMinutes}
+                disabled={!view.settings.usageTrackingEnabled}
+                onChange={(event) => setIdleMinutes(event.currentTarget.value)}
+              />
+              <span>min idle</span>
+              <button
+                className="small-btn"
+                type="submit"
+                disabled={!view.settings.usageTrackingEnabled}
+              >
+                Save
+              </button>
+            </div>
+            <p className="field-hint">
+              Idle and locked time never counts. Recording pauses automatically.
+            </p>
+          </form>
+          <p className="privacy-note">
+            <ShieldIcon size={14} />
+            <span>
+              Everything stays in Tempo&apos;s local database. No network, no
+              accounts, no telemetry.
+            </span>
+          </p>
+          <button
+            type="button"
+            className={`danger-btn ${clearState === "confirm" ? "confirm" : ""} ${
+              clearState === "cleared" ? "cleared" : ""
+            }`}
+            onClick={() => void clearUsage()}
+            disabled={clearing || clearState === "cleared"}
+          >
+            {clearState === "confirm"
+              ? "Click again to erase usage history"
+              : clearState === "cleared"
+                ? "Usage history cleared"
+                : "Clear usage history"}
+          </button>
         </section>
 
         <section className="settings-section">

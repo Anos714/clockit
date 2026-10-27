@@ -191,3 +191,21 @@ export function TrashIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+export function ChartIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 20h16" />
+      <path d="M6.5 20v-6M11 20V8M15.5 20v-9M20 20V4.5" />
+    </IconBase>
+  );
+}
+
+export function ShieldIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 3 5 5.8v5.4c0 4.2 2.8 7.6 7 9.8 4.2-2.2 7-5.6 7-9.8V5.8L12 3Z" />
+      <path d="m9 11.8 2.1 2.1 4-4.1" />
+    </IconBase>
+  );
+}

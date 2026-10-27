@@ -86,3 +86,33 @@ export function formatWhen(ms: number): string {
     day: "numeric",
   });
 }
+
+export function formatUsage(ms: number): string {
+  if (!Number.isFinite(ms) || ms <= 0) return "0m";
+  const minutes = Math.floor(ms / 60_000);
+  if (minutes < 1) return "<1m";
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (hours === 0) return `${rest}m`;
+  if (rest === 0) return `${hours}h`;
+  return `${hours}h ${rest}m`;
+}
+
+export function formatWeekday(day: string): string {
+  return new Date(`${day}T12:00:00`).toLocaleDateString([], {
+    weekday: "short",
+  });
+}
+
+export function formatHour(hour: number): string {
+  const date = new Date();
+  date.setHours(hour, 0, 0, 0);
+  return date.toLocaleTimeString([], { hour: "numeric" });
+}
+
+export function formatShortDate(ms: number): string {
+  return new Date(ms).toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+  });
+}
