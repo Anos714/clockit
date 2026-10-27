@@ -40,6 +40,14 @@
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.png"
-    ]
+    ],
+    "linux": {
+      "deb": {
+        "files": {
+          "/usr/bin/clockit-applet": "../applet/target/release/clockit-applet",
+          "/usr/share/applications/com.clockit.Clockit.desktop": "../applet/data/com.clockit.Clockit.desktop"
+        }
+      }
+    }
   }
 }
