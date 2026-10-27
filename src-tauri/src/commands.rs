@@ -5,6 +5,7 @@ use tauri::{AppHandle, Manager, State};
 use crate::settings::{Settings, SettingsView};
 use crate::store::{SessionRecord, TodoRecord};
 use crate::timer::{now_ms, TimerMode, TimerSnapshot};
+use crate::usage::{UsageSnapshot, UsageStatus};
 use crate::windows;
 use crate::AppState;
 
@@ -123,7 +124,12 @@ pub fn update_settings(
     state: State<'_, AppState>,
     settings: Settings,
 ) -> Result<SettingsView, String> {
-    state.engine.update_settings(settings)
+    let view = state.engine.update_settings(settings)?;
+    state.usage.configure(
+        view.settings.usage_tracking_enabled,
+        view.settings.idle_threshold_secs,
+    );
+    Ok(view)
 }
 
 #[tauri::command]
@@ -132,6 +138,24 @@ pub fn set_autostart(
     enabled: bool,
 ) -> Result<SettingsView, String> {
     state.engine.set_autostart(enabled)
+}
+
+#[tauri::command]
+pub fn get_usage_status(state: State<'_, AppState>) -> UsageStatus {
+    state.usage.status()
+}
+
+#[tauri::command]
+pub fn get_usage_snapshot(
+    state: State<'_, AppState>,
+    days: Option<u32>,
+) -> Result<UsageSnapshot, String> {
+    state.usage.snapshot(days.unwrap_or(7))
+}
+
+#[tauri::command]
+pub fn clear_usage_history(state: State<'_, AppState>) -> Result<(), String> {
+    state.usage.clear_history()
 }
 
 #[tauri::command]
