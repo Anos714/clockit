@@ -2,8 +2,8 @@ import type { ThemePreference } from "./types";
 
 export type ResolvedTheme = "light" | "dark";
 
-const CACHE_KEY = "tempo.theme";
-const RESOLVED_KEY = "tempo.theme.resolved";
+const CACHE_KEY = "clockit.theme";
+const RESOLVED_KEY = "clockit.theme.resolved";
 
 let systemTheme: ResolvedTheme | null = null;
 

@@ -217,7 +217,7 @@ export function Insights({ onClose }: InsightsProps) {
                 <div className="insight-empty">
                   <LeafIcon size={17} />
                   <p>
-                    The trail is empty. Use your desktop as usual — Tempo will
+                    The trail is empty. Use your desktop as usual — Clockit will
                     sketch the shape of your week here.
                   </p>
                 </div>

@@ -43,7 +43,7 @@ export default function MiniApp() {
 
         <div className="mini-head" data-tauri-drag-region>
           <span className={`mini-dot ${status}`} />
-          <span className="mini-label">Tempo</span>
+          <span className="mini-label">Clockit</span>
           <span className="mini-mode">{stopwatch ? "stopwatch" : "timer"}</span>
           <span className="mini-spacer" data-tauri-drag-region />
           <button
@@ -100,7 +100,7 @@ export default function MiniApp() {
           <motion.button
             className="mini-icon wide"
             onClick={() => void expand()}
-            aria-label="Open Tempo"
+            aria-label="Open Clockit"
             title="Open full window"
             whileTap={{ scale: 0.94 }}
           >

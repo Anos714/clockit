@@ -29,8 +29,8 @@
     <script>
       (function () {
         try {
-          var preference = localStorage.getItem("tempo.theme") || "system";
-          var cached = localStorage.getItem("tempo.theme.resolved");
+          var preference = localStorage.getItem("clockit.theme") || "system";
+          var cached = localStorage.getItem("clockit.theme.resolved");
           var dark =
             preference === "dark" ||
             (preference !== "light" &&
@@ -46,7 +46,7 @@
         }
       })();
     </script>
-    <title>Tempo</title>
+    <title>Clockit</title>
   </head>
 
   <body>

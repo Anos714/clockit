@@ -85,7 +85,7 @@ impl UsageService {
         let status_for_thread = status.clone();
         let store_for_thread = store.clone();
         let spawned = std::thread::Builder::new()
-            .name("tempo-usage".to_string())
+            .name("clockit-usage".to_string())
             .spawn(move || {
                 tracker::run(
                     store_for_thread,

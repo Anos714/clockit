@@ -44,7 +44,7 @@ pub fn run() {
                 .build(),
         )
         .setup(|app| {
-            let data_dir = app.path().data_dir()?.join("tempo");
+            let data_dir = app.path().data_dir()?.join("clockit");
             let store = Arc::new(
                 Store::open(&data_dir).map_err(std::io::Error::other)?,
             );
@@ -123,7 +123,7 @@ pub fn run() {
             commands::quit_app,
         ])
         .build(tauri::generate_context!())
-        .expect("error while building Tempo")
+        .expect("error while building Clockit")
         .run(|app, event| {
             if let tauri::RunEvent::Exit = event {
                 app.state::<AppState>().usage.shutdown();

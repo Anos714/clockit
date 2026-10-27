@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capabilities for the Tempo windows",
+  "description": "Capabilities for the Clockit windows",
   "windows": ["main", "mini"],
   "permissions": [
     "core:default",

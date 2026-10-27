@@ -159,7 +159,7 @@ export function SettingsPanel({
           </div>
           <p className="field-hint">
             {view.settings.theme === "system"
-              ? "Tempo follows your desktop's light and dark preference."
+              ? "Clockit follows your desktop's light and dark preference."
               : "Your choice is remembered on this machine."}
           </p>
         </section>
@@ -261,7 +261,7 @@ export function SettingsPanel({
           <p className="privacy-note">
             <ShieldIcon size={14} />
             <span>
-              Everything stays in Tempo&apos;s local database. No network, no
+              Everything stays in Clockit&apos;s local database. No network, no
               accounts, no telemetry.
             </span>
           </p>
@@ -294,7 +294,7 @@ export function SettingsPanel({
           </SettingRow>
           {view.autostartEnabled ? (
             <p className="field-hint">
-              Autostart uses the binary currently running Tempo.
+              Autostart uses the binary currently running Clockit.
             </p>
           ) : null}
           {error ? <p className="settings-error">{error}</p> : null}
@@ -302,7 +302,7 @@ export function SettingsPanel({
 
         <footer className="settings-footer">
           <span>
-            <LeafIcon size={14} /> Tempo 0.1.0
+            <LeafIcon size={14} /> Clockit 0.1.0
           </span>
           <span>Everything stays on this machine.</span>
         </footer>

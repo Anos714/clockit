@@ -753,7 +753,7 @@ mod tests {
 
     fn temp_store(name: &str) -> (Store, PathBuf) {
         let dir = std::env::temp_dir().join(format!(
-            "tempo-usage-test-{}-{name}",
+            "clockit-usage-test-{}-{name}",
             std::process::id()
         ));
         let _ = std::fs::remove_dir_all(&dir);

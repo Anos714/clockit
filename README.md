@@ -1,4 +1,4 @@
-# Tempo
+# Clockit
 
 A focused desktop timer for Pop!_OS / COSMIC, built with Tauri 2, Rust, and
 React. It lives in the COSMIC panel as a tray icon, keeps an authoritative
@@ -55,14 +55,14 @@ minutes.
 
 ```bash
 bun run tauri build --bundles deb
-sudo apt install ./src-tauri/target/release/bundle/deb/Tempo_0.1.0_amd64.deb
+sudo apt install ./src-tauri/target/release/bundle/deb/Clockit_0.1.0_amd64.deb
 ```
 
-The installed binary is `tempo`. Data lives in `~/.local/share/tempo/tempo.db`.
+The installed binary is `clockit`. Data lives in `~/.local/share/clockit/clockit.db`.
 
 App-usage tracking uses Wayland protocols provided by COSMIC. On non-COSMIC
 sessions the Insights view explains that window information is unavailable and
-the rest of Tempo keeps working; tracking retries quietly in the background.
+the rest of Clockit keeps working; tracking retries quietly in the background.
 
 ## CLI
 
@@ -71,24 +71,24 @@ the running app and exits, which is how you can bind shortcuts in COSMIC
 Settings without Wayland global-hotkey support.
 
 ```bash
-tempo --toggle          # start / pause / resume
-tempo --start 1500      # start a 25 minute timer
-tempo --stopwatch       # switch to stopwatch mode
-tempo --countdown       # switch back to countdown mode
-tempo --stopwatch --start
-tempo --pause
-tempo --resume
-tempo --reset
-tempo --show
-tempo --mini
-tempo --hidden          # start in the tray without opening the window
-tempo --quit
+clockit --toggle          # start / pause / resume
+clockit --start 1500      # start a 25 minute timer
+clockit --stopwatch       # switch to stopwatch mode
+clockit --countdown       # switch back to countdown mode
+clockit --stopwatch --start
+clockit --pause
+clockit --resume
+clockit --reset
+clockit --show
+clockit --mini
+clockit --hidden          # start in the tray without opening the window
+clockit --quit
 ```
 
-Mode switches are applied before `--start`, so `tempo --stopwatch --start`
+Mode switches are applied before `--start`, so `clockit --stopwatch --start`
 starts counting up immediately.
 
-Suggested COSMIC shortcut commands: `tempo --toggle`, `tempo --reset`.
+Suggested COSMIC shortcut commands: `clockit --toggle`, `clockit --reset`.
 
 ## Panel behavior on COSMIC
 

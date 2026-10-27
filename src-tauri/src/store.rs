@@ -87,7 +87,7 @@ struct UsagePart {
 impl Store {
     pub fn open(dir: &Path) -> Result<Self, String> {
         fs::create_dir_all(dir).map_err(|e| format!("could not create data dir: {e}"))?;
-        let path = dir.join("tempo.db");
+        let path = dir.join("clockit.db");
         let conn = Connection::open(&path).map_err(|e| format!("could not open database: {e}"))?;
         conn.busy_timeout(Duration::from_secs(2))
             .map_err(|e| e.to_string())?;
@@ -521,7 +521,7 @@ mod tests {
 
     fn temp_store(name: &str) -> (Store, std::path::PathBuf) {
         let dir = std::env::temp_dir().join(format!(
-            "tempo-store-test-{}-{name}",
+            "clockit-store-test-{}-{name}",
             std::process::id()
         ));
         let _ = fs::remove_dir_all(&dir);
