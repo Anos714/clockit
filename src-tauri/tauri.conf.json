@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Tempo",
+  "productName": "Clockit",
   "version": "0.1.0",
-  "identifier": "com.tempo.app",
+  "identifier": "com.clockit.app",
   "build": {
     "beforeDevCommand": "bun run dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Tempo",
+        "title": "Clockit",
         "width": 960,
         "height": 740,
         "minWidth": 720,
@@ -34,7 +34,7 @@
     ],
     "category": "Utility",
     "shortDescription": "A focused desktop timer",
-    "longDescription": "Tempo is a local-first focus timer and stopwatch with a COSMIC panel tray, a calm forest theme in light and dark, session history, a quick checklist, a mini window, fullscreen focus mode, and private on-device app-usage insights.",
+    "longDescription": "Clockit is a local-first focus timer and stopwatch with a COSMIC panel tray, a calm forest theme in light and dark, session history, a quick checklist, a mini window, fullscreen focus mode, and private on-device app-usage insights.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

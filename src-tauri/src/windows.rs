@@ -37,7 +37,7 @@ pub fn open_mini(app: &AppHandle) -> Result<(), String> {
         "mini",
         WebviewUrl::App("index.html?mini=1".into()),
     )
-    .title("Tempo Mini")
+    .title("Clockit Mini")
     .inner_size(300.0, 150.0)
     .resizable(false)
     .decorations(false)

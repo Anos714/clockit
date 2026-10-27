@@ -300,7 +300,7 @@ export default function App() {
           <div className="brand">
             <SproutMark size={42} />
             <div className="brand-copy">
-              <span className="brand-name">Tempo</span>
+              <span className="brand-name">Clockit</span>
               <span className="brand-tag">a quiet focus timer</span>
             </div>
           </div>
@@ -714,7 +714,7 @@ function FocusView({
       <div className="focus-bottom">
         <span>{stopwatch ? "Stopwatch" : "Timer"}</span>
         <span className="focus-brand">
-          <LeafGlyph size={13} /> Tempo
+          <LeafGlyph size={13} /> Clockit
         </span>
       </div>
     </div>

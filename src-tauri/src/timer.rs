@@ -500,7 +500,7 @@ impl TimerEngine {
                     .app
                     .notification()
                     .builder()
-                    .title("Tempo - timer complete")
+                    .title("Clockit - timer complete")
                     .body(&body)
                     .show()
                 {
@@ -581,23 +581,23 @@ impl TimerEngine {
         let tooltip = match snapshot.mode {
             TimerMode::Stopwatch => match snapshot.status {
                 TimerStatus::Running => {
-                    format!("Tempo - stopwatch {}", format_elapsed(snapshot.elapsed_ms))
+                    format!("Clockit - stopwatch {}", format_elapsed(snapshot.elapsed_ms))
                 }
                 TimerStatus::Paused => format!(
-                    "Tempo - stopwatch paused at {}",
+                    "Clockit - stopwatch paused at {}",
                     format_elapsed(snapshot.elapsed_ms)
                 ),
-                _ => "Tempo - stopwatch ready".to_string(),
+                _ => "Clockit - stopwatch ready".to_string(),
             },
             TimerMode::Countdown => match snapshot.status {
                 TimerStatus::Running => {
-                    format!("Tempo - {} left", format_clock(snapshot.remaining_ms))
+                    format!("Clockit - {} left", format_clock(snapshot.remaining_ms))
                 }
                 TimerStatus::Paused => {
-                    format!("Tempo - paused at {}", format_clock(snapshot.remaining_ms))
+                    format!("Clockit - paused at {}", format_clock(snapshot.remaining_ms))
                 }
-                TimerStatus::Finished => "Tempo - finished".to_string(),
-                TimerStatus::Idle => "Tempo - ready".to_string(),
+                TimerStatus::Finished => "Clockit - finished".to_string(),
+                TimerStatus::Idle => "Clockit - ready".to_string(),
             },
         };
 
@@ -704,7 +704,7 @@ pub fn format_elapsed(ms: u64) -> String {
 }
 
 fn play_chime() {
-    let path = std::env::temp_dir().join("tempo-chime.wav");
+    let path = std::env::temp_dir().join("clockit-chime.wav");
     if !path.exists() {
         if let Err(error) = std::fs::write(&path, CHIME) {
             eprintln!("could not write chime: {error}");

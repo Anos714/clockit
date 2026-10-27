@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "tempo",
+      "name": "clockit",
       "dependencies": {
         "@tauri-apps/api": "^2",
         "motion": "^14.6.0",
