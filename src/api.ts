@@ -6,6 +6,8 @@ import type {
   TimerMode,
   TimerSnapshot,
   Todo,
+  UsageSnapshot,
+  UsageStatus,
 } from "./types";
 
 export const api = {
@@ -33,6 +35,10 @@ export const api = {
     invoke<SettingsView>("update_settings", { settings }),
   setAutostart: (enabled: boolean) =>
     invoke<SettingsView>("set_autostart", { enabled }),
+  usageStatus: () => invoke<UsageStatus>("get_usage_status"),
+  usageSnapshot: (days = 7) =>
+    invoke<UsageSnapshot>("get_usage_snapshot", { days }),
+  clearUsageHistory: () => invoke<void>("clear_usage_history"),
   openMini: () => invoke<void>("open_mini"),
   showMain: () => invoke<void>("show_main"),
   hideMini: () => invoke<void>("hide_mini"),

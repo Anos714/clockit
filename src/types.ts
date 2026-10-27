@@ -20,6 +20,8 @@ export interface Settings {
   notificationsEnabled: boolean;
   defaultMinutes: number;
   theme: ThemePreference;
+  usageTrackingEnabled: boolean;
+  idleThresholdSecs: number;
 }
 
 export interface SettingsView {
@@ -42,4 +44,53 @@ export interface Todo {
   done: boolean;
   createdAtMs: number;
   updatedAtMs: number;
+}
+
+export type UsagePauseReason = "idle" | "locked" | "disabled";
+
+export interface UsageStatus {
+  available: boolean;
+  reason: string | null;
+  tracking: boolean;
+  paused: boolean;
+  pauseReason: UsagePauseReason | null;
+  activeApp: string | null;
+  activeSinceMs: number | null;
+  idle: boolean;
+  locked: boolean;
+  idleSupported: boolean;
+  lockSupported: boolean;
+}
+
+export interface UsageAppTotal {
+  appId: string;
+  totalMs: number;
+}
+
+export interface UsageDayTotal {
+  day: string;
+  totalMs: number;
+}
+
+export interface UsageHourTotal {
+  hour: number;
+  totalMs: number;
+}
+
+export interface UsageRecord {
+  id: number;
+  appId: string;
+  startedAtMs: number;
+  endedAtMs: number;
+}
+
+export interface UsageSnapshot {
+  days: number;
+  totalMs: number;
+  todayMs: number;
+  apps: UsageAppTotal[];
+  daily: UsageDayTotal[];
+  hourly: UsageHourTotal[];
+  recent: UsageRecord[];
+  trackedSinceMs: number | null;
 }
