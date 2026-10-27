@@ -12,6 +12,8 @@ wall-clock timer in Rust, and stores sessions locally in SQLite.
 - Start, pause, resume, reset. Keyboard: `Space` start/pause, `R` reset, `F` focus mode, `I` insights.
 - Wall-clock engine: survives app restarts and system suspend.
 - COSMIC panel tray with live time, start/pause, reset, mini window, quit.
+- Native COSMIC panel applet with the live countdown; one click starts, pauses,
+  or resumes the timer straight from the panel.
 - Frameless mini window for a compact timer on screen.
 - Fullscreen focus mode with very large digits, for both timer and stopwatch.
 - Desktop notification and chime on countdown completion.
@@ -54,11 +56,15 @@ minutes.
 ## Build and install
 
 ```bash
-bun run tauri build --bundles deb
+bun run build:deb
 sudo apt install ./src-tauri/target/release/bundle/deb/Clockit_0.1.0_amd64.deb
 ```
 
-The installed binary is `clockit`. Data lives in `~/.local/share/clockit/clockit.db`.
+`build:deb` compiles the native panel applet first, then Tauri builds the app and
+packs both the applet binary and its desktop entry into the `.deb`.
+
+The installed binaries are `clockit` and `clockit-applet`. Data lives in
+`~/.local/share/clockit/clockit.db`.
 
 App-usage tracking uses Wayland protocols provided by COSMIC. On non-COSMIC
 sessions the Insights view explains that window information is unavailable and
@@ -92,13 +98,22 @@ Suggested COSMIC shortcut commands: `clockit --toggle`, `clockit --reset`.
 
 ## Panel behavior on COSMIC
 
-Tauri uses an AppIndicator/StatusNotifierItem tray. COSMIC shows it in the panel;
-left-click opens the menu (Linux appindicator limitation), so the panel control is
-a menu rather than a single clickable timer button.
+Clockit ships a native libcosmic panel applet, installed with the `.deb`. After
+installing, open the COSMIC panel settings and add the Clockit applet. The
+applet shows the live countdown and toggles the timer with a single click;
+when Clockit is not running it shows a dash and launches the app on click.
+
+The applet talks to the running app through the session D-Bus service
+`com.clockit.Timer` (`/com/clockit/Timer`), which exposes `State`, `Toggle`,
+`Start`, `Pause`, `Reset`, and `Show`. The service is local to your session and
+does not open a network port.
+
+Tauri still also provides an AppIndicator/StatusNotifierItem tray. COSMIC shows
+it in the panel as a menu (left-click opens the menu, a Linux appindicator
+limitation), so use the native applet for the one-click control.
 
 The mini window requests always-on-top, but Wayland compositors may ignore that
-hint. COSMIC window rules or a future native COSMIC applet are the reliable
-solutions.
+hint. COSMIC window rules are the reliable solution.
 
 ## Architecture
 
@@ -106,6 +121,7 @@ solutions.
 src-tauri/src/
   lib.rs        app wiring, plugins, window lifecycle
   timer.rs      wall-clock countdown + stopwatch engine, tray labels, alerts
+  timer_bus.rs  session D-Bus service used by the panel applet
   store.rs      SQLite: settings, timer snapshot, sessions, tasks, usage
   settings.rs   persisted preferences, including theme and privacy
   tray.rs       tray icon and menu
@@ -129,6 +145,9 @@ src/
   components/   TimerRing, ModeSwitch, TodoList, SessionList,
                 Insights, SettingsPanel, Botanical, Icons
 public/fonts/   bundled Fraunces + Karla variable fonts (OFL)
+applet/
+  src/main.rs   native libcosmic panel applet and D-Bus client
+  data/         applet desktop entry, installed by the .deb
 ```
 
 ## Design notes
@@ -149,7 +168,9 @@ public/fonts/   bundled Fraunces + Karla variable fonts (OFL)
 - Phase 2 (complete): app usage tracking on COSMIC via the
   `cosmic-toplevel-info` Wayland protocol, idle/lock handling, and a local
   Insights view with privacy settings.
-- Phase 3: native libcosmic panel applet over D-Bus and a one-click panel timer.
+- Phase 3 (complete): native libcosmic panel applet over D-Bus with a one-click
+  panel timer. The applet ships in the `.deb` and is added from the COSMIC panel
+  settings.
 
 ## Notes
 

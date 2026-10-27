@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Clockit
+Comment=Start, pause, and watch the Clockit timer from the panel
+Type=Application
+Exec=clockit-applet
+Icon=clockit
+Terminal=false
+Categories=COSMIC;
+Keywords=COSMIC;Timer;Stopwatch;Focus;Clockit;
+NoDisplay=true
+X-CosmicApplet=true
+X-CosmicShrinkable=true
+X-HostWaylandDisplay=true

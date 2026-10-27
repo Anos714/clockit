@@ -3,6 +3,7 @@ mod commands;
 mod settings;
 mod store;
 mod timer;
+mod timer_bus;
 mod tray;
 mod usage;
 mod windows;
@@ -69,6 +70,7 @@ pub fn run() {
             engine.persist();
 
             tray::setup(app, engine.clone())?;
+            timer_bus::spawn(engine.clone());
 
             app.manage(AppState {
                 engine: engine.clone(),
