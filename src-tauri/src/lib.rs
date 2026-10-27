@@ -4,6 +4,7 @@ mod settings;
 mod store;
 mod timer;
 mod tray;
+mod usage;
 mod windows;
 
 use std::sync::atomic::Ordering;
@@ -14,9 +15,11 @@ use tauri::Manager;
 use crate::settings::Settings;
 use crate::store::Store;
 use crate::timer::{now_ms, TimerEngine};
+use crate::usage::UsageService;
 
 pub struct AppState {
     pub engine: Arc<TimerEngine>,
+    pub usage: Arc<UsageService>,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -48,6 +51,11 @@ pub fn run() {
 
             let mut settings: Settings = store.get_meta("settings").unwrap_or_default();
             settings.sanitize();
+            let usage = Arc::new(UsageService::start(
+                store.clone(),
+                settings.usage_tracking_enabled,
+                settings.idle_threshold_secs * 1000,
+            ));
             let core = timer::recover(&store, settings.default_ms(), now_ms());
             let engine = Arc::new(TimerEngine::new(
                 app.handle().clone(),
@@ -64,6 +72,7 @@ pub fn run() {
 
             app.manage(AppState {
                 engine: engine.clone(),
+                usage,
             });
 
             engine.update_tray();
@@ -104,12 +113,20 @@ pub fn run() {
             commands::get_settings,
             commands::update_settings,
             commands::set_autostart,
+            commands::get_usage_status,
+            commands::get_usage_snapshot,
+            commands::clear_usage_history,
             commands::open_mini,
             commands::show_main,
             commands::hide_main,
             commands::hide_mini,
             commands::quit_app,
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running Tempo");
+        .build(tauri::generate_context!())
+        .expect("error while building Tempo")
+        .run(|app, event| {
+            if let tauri::RunEvent::Exit = event {
+                app.state::<AppState>().usage.shutdown();
+            }
+        });
 }

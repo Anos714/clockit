@@ -16,6 +16,8 @@ pub struct Settings {
     pub notifications_enabled: bool,
     pub default_minutes: u64,
     pub theme: Theme,
+    pub usage_tracking_enabled: bool,
+    pub idle_threshold_secs: u64,
 }
 
 impl Default for Settings {
@@ -25,6 +27,8 @@ impl Default for Settings {
             notifications_enabled: true,
             default_minutes: 25,
             theme: Theme::System,
+            usage_tracking_enabled: true,
+            idle_threshold_secs: 120,
         }
     }
 }
@@ -36,6 +40,7 @@ impl Settings {
 
     pub fn sanitize(&mut self) {
         self.default_minutes = self.default_minutes.clamp(1, 1440);
+        self.idle_threshold_secs = self.idle_threshold_secs.clamp(30, 1800);
     }
 }
 
@@ -57,9 +62,13 @@ mod tests {
                 .expect("legacy settings parse");
         assert_eq!(settings.theme, Theme::System);
         assert_eq!(settings.default_minutes, 40);
+        assert!(settings.usage_tracking_enabled);
+        assert_eq!(settings.idle_threshold_secs, 120);
 
         settings.default_minutes = 0;
+        settings.idle_threshold_secs = 5;
         settings.sanitize();
         assert_eq!(settings.default_minutes, 1);
+        assert_eq!(settings.idle_threshold_secs, 30);
     }
 }

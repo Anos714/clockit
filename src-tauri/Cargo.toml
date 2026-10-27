@@ -22,6 +22,13 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rusqlite = { version = "0.41", features = ["bundled"] }
 parking_lot = "0.12"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+zbus = "5"
+wayland-client = "0.31"
+wayland-protocols = { version = "0.32", features = ["client", "staging"] }
+wayland-scanner = "0.31"
+wayland-backend = "0.3"
+libc = "0.2"
 
 [profile.release]
 codegen-units = 1
