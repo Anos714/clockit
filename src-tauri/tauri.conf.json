@@ -34,7 +34,7 @@
     ],
     "category": "Utility",
     "shortDescription": "A focused desktop timer",
-    "longDescription": "Tempo is a local-first focus timer and stopwatch with a COSMIC panel tray, a calm forest theme in light and dark, session history, a quick checklist, a mini window, and fullscreen focus mode.",
+    "longDescription": "Tempo is a local-first focus timer and stopwatch with a COSMIC panel tray, a calm forest theme in light and dark, session history, a quick checklist, a mini window, fullscreen focus mode, and private on-device app-usage insights.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

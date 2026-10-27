@@ -9,7 +9,7 @@ wall-clock timer in Rust, and stores sessions locally in SQLite.
 - Countdown timer with 5 / 15 / 25 / 45 / 60 minute presets and a custom duration.
 - Clock shows seconds and a live millisecond fraction in timer, stopwatch, mini window, and focus mode.
 - Stopwatch with millisecond display that keeps its elapsed time across pauses and restarts.
-- Start, pause, resume, reset. Keyboard: `Space` start/pause, `R` reset, `F` focus mode.
+- Start, pause, resume, reset. Keyboard: `Space` start/pause, `R` reset, `F` focus mode, `I` insights.
 - Wall-clock engine: survives app restarts and system suspend.
 - COSMIC panel tray with live time, start/pause, reset, mini window, quit.
 - Frameless mini window for a compact timer on screen.
@@ -17,11 +17,18 @@ wall-clock timer in Rust, and stores sessions locally in SQLite.
 - Desktop notification and chime on countdown completion.
 - SQLite session history (focus sessions, stopwatch runs, and ended-early sessions).
 - Quick checklist with add, rename, complete, and delete, stored locally.
+- Local app-usage insights on COSMIC: which app is active, weekly and hourly
+  charts, most-used apps, and recent activity, recorded from the
+  `cosmic-toplevel-info` Wayland protocol.
+- Idle- and lock-aware tracking: time away from the keyboard or behind a locked
+  screen is trimmed instead of counted.
 - Single instance with CLI control flags, useful for COSMIC custom shortcuts.
 - Forest theme in daylight and night-wood palettes, with system, light, and dark
   modes plus an in-app theme switch.
 - Calm botanical artwork, animated branches and leaves, and reduced-motion support.
-- Local only: no network calls, no telemetry, no accounts.
+- Local only: no network calls, no telemetry, no accounts. Usage insight stores
+  app IDs and durations only; window titles are never stored, and history is kept
+  for 90 days.
 
 ## Prerequisites
 
@@ -52,6 +59,10 @@ sudo apt install ./src-tauri/target/release/bundle/deb/Tempo_0.1.0_amd64.deb
 ```
 
 The installed binary is `tempo`. Data lives in `~/.local/share/tempo/tempo.db`.
+
+App-usage tracking uses Wayland protocols provided by COSMIC. On non-COSMIC
+sessions the Insights view explains that window information is unavailable and
+the rest of Tempo keeps working; tracking retries quietly in the background.
 
 ## CLI
 
@@ -95,22 +106,28 @@ solutions.
 src-tauri/src/
   lib.rs        app wiring, plugins, window lifecycle
   timer.rs      wall-clock countdown + stopwatch engine, tray labels, alerts
-  store.rs      SQLite: settings, timer snapshot, sessions, tasks
-  settings.rs   persisted preferences, including theme
+  store.rs      SQLite: settings, timer snapshot, sessions, tasks, usage
+  settings.rs   persisted preferences, including theme and privacy
   tray.rs       tray icon and menu
   cli.rs        CLI flags + single-instance forwarding
   commands.rs   Tauri commands used by the UI
   windows.rs    main/mini window helpers
+  usage/
+    mod.rs      usage service, status, snapshots, retention
+    tracker.rs  COSMIC toplevel + idle + logind lock tracker
+    protocol.rs generated cosmic-toplevel-info bindings
+src-tauri/protocols/  vendored COSMIC protocol XML (permissive licence)
 src/
   App.tsx       main window + focus mode UI
   MiniApp.tsx   mini window UI
   useTimer.ts   backend state + smooth local clock
   useTheme.ts   system / light / dark theme sync
   theme.ts      theme resolution and flash-free caching
-  format.ts     clock and duration formatting
+  format.ts     clock, duration, and insights formatting
+  usage.ts      friendly app-name display for app IDs
   styles.css    forest design system, motion, responsive rules
   components/   TimerRing, ModeSwitch, TodoList, SessionList,
-                SettingsPanel, Botanical, Icons
+                Insights, SettingsPanel, Botanical, Icons
 public/fonts/   bundled Fraunces + Karla variable fonts (OFL)
 ```
 
@@ -129,10 +146,10 @@ public/fonts/   bundled Fraunces + Karla variable fonts (OFL)
 
 ## Roadmap
 
-- Phase 2: app usage tracking on COSMIC via the `cosmic-toplevel-info` Wayland
-  protocol, idle/lock handling, and a local analytics view.
-- Phase 3: native libcosmic panel applet over D-Bus, one-click panel timer, and
-  idle-aware tracking.
+- Phase 2 (complete): app usage tracking on COSMIC via the
+  `cosmic-toplevel-info` Wayland protocol, idle/lock handling, and a local
+  Insights view with privacy settings.
+- Phase 3: native libcosmic panel applet over D-Bus and a one-click panel timer.
 
 ## Notes
 
@@ -143,5 +160,6 @@ public/fonts/   bundled Fraunces + Karla variable fonts (OFL)
 - All artwork is inline SVG or CSS; no images are fetched at runtime.
 - Autostart is opt-in from Settings. In `tauri dev` it registers the debug
   binary, which is not useful after development.
-- The tracker will be COSMIC-specific; Wayland prevents generic global window
-  inspection.
+- Usage insights require a COSMIC Wayland session; Wayland prevents generic
+  global window inspection. Only app IDs are stored, split at local hour and day
+  boundaries, and old rows are pruned after 90 days.
