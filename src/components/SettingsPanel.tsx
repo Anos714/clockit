@@ -302,7 +302,7 @@ export function SettingsPanel({
 
         <footer className="settings-footer">
           <span>
-            <LeafIcon size={14} /> Clockit 0.1.0
+            <LeafIcon size={14} /> Clockit 0.2.0
           </span>
           <span>Everything stays on this machine.</span>
         </footer>

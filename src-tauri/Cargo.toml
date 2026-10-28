@@ -1,8 +1,9 @@
 [package]
 name = "clockit"
-version = "0.1.0"
+version = "0.2.0"
 description = "A focused desktop timer for Linux"
 authors = ["Clockit"]
+license = "MIT"
 edition = "2024"
 
 [lib]
